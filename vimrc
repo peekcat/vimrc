@@ -1,7 +1,7 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "
 " Github: prcting
-" Maintainer: ZeZhou Ding
+" Maintainer: Maize
 "
 " Sections:
 "   -> General
