@@ -1,20 +1,29 @@
-"  __  __        __     _____ __  __ ____   ____
-" |  \/  |_   _  \ \   / /_ _|  \/  |  _ \ / ___|
-" | |\/| | | | |  \ \ / / | || |\/| | |_) | |
-" | |  | | |_| |   \ V /  | || |  | |  _ <| |___
-" |_|  |_|\__, |    \_/  |___|_|  |_|_| \_\\____|
-"         |___/
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "
+" Github: prcting
+" Maintainer: Maize
 "
-" Github: nilsad
-" Maintainer: ZeZhou Ding
+" Sections:
+"   -> General
+"   -> VIM user interface
+"   -> Colors and Fonts
+"   -> Text, tab and indent related
+"   -> Key mappings
+"   -> Cursor movement
+"   -> Window management
+"   -> Status line
+"   -> Spell checking
+"   -> Misc
+"   -> Helper functions
 "
-"
-" ===
-" === General
-" ===
-" In normal can use mouse
-set mouse=n
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => General
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Color compatibility
+let &t_ut=''
 
 " Don't compatible vi
 set nocompatible
@@ -22,13 +31,8 @@ set nocompatible
 " Open file type check
 filetype on
 
-" Enable filetype plugins
-filetype plugin on
-filetype indent on
-
 " Jump to matches when entering parentheses
 set showmatch
-
 " Tenths of a second to show the matching parenthesis
 set matchtime=2
 
@@ -40,16 +44,44 @@ set clipboard=unnamed
 
 " Set Backspace mode
 set bs=eol,start,indent
-set whichwrap+=<,>,h,l
 
 " Display line number
 set number
+
+" Display relative line number
+set relativenumber
 
 " The current line displays line
 set cursorline
 
 " Terminal default Bash
 set shell=bash
+
+" When error
+set noerrorbells
+set visualbell
+
+" Words check
+" set spell spelllang=en_us
+
+" cursor line
+let &t_SI = "\<Esc>[5 q"
+let &t_SR = "\<Esc>[3 q"
+let &t_EI = "\<Esc>[1 q"
+
+" Set to auto read when a file is changed from the outside
+set autoread
+au FocusGained,BufEnter * checktime
+
+" Go back to the last edit
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => VIM user interface
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" In normal can use mouse
+set mouse=n
 
 " Ignore case when searching
 set ignorecase
@@ -90,7 +122,7 @@ set showcmd
 " display mode
 set showmode
 
-" Set 5 lines to the cursor - when moving vertically using j/k
+" row 5 content
 set scrolloff=5
 
 " the new windows open in right
@@ -99,48 +131,15 @@ set splitright
 " the new windows open in below
 set splitbelow
 
-" Avoid garbled characters in Chinese language windows OS
-let $LANG='en'
-set langmenu=en
 
-" No annoying sound on errors
-set noerrorbells
-set novisualbell
-set t_vb=
-set tm=500
-
-" Properly disable sound on errors on MacVim
-if has("gui_macvim")
-    autocmd GUIEnter * set vb t_vb=
-endif
-
-" In insert mode use cursor line
-let &t_SI = "\<Esc>[5 q"
-let &t_SR = "\<Esc>[3 q"
-let &t_EI = "\<Esc>[1 q"
-
-" Set to auto read when a file is changed from the outside
-set autoread
-au FocusGained,BufEnter * checktime
-
-" Go back to the last edit
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-
-
-" ===
-" === Themes
-" ===
-" Color compatibility
-let &t_ut=''
-
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Colors and Fonts
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Enable syntax highlighting
 syntax enable
 
-" Add a bit extra margin to the left
-"set foldcolumn=1
-
 try
-    colorscheme slate
+    colorscheme torte
 catch
 endtry
 
@@ -161,28 +160,18 @@ set encoding=utf8
 set ffs=unix,dos,mac
 
 
-" ===
-" === Status line
-" ===
-" Always show the status line
-set laststatus=2
-
-" Format the status line
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ Line:\ %l\ \ Column:\ %c
-
-
-" ===
-" === Text, tab and indent related
-" ===
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Text, tab and indent related
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Use spaces instead of tabs
 set expandtab
 set smarttab
 set shiftround
 
-" 1 tab == 2 spaces
-set shiftwidth=2
-set tabstop=2
-set softtabstop=2
+" 1 tab == 4 spaces
+set shiftwidth=4
+set tabstop=4
+set softtabstop=4
 
 " list
 set list
@@ -197,9 +186,9 @@ set si "Smart indent
 set wrap "Wrap lines
 
 
-" ===
-" === Basic Mappings
-" ===
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Key mappings
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " set <LEADER> as <SPACE>
 let mapleader="\<Space>"
 
@@ -211,8 +200,12 @@ noremap Q :q<CR>
 noremap <C-q> :qa<CR>
 noremap S :w<CR>
 
-" Fast saving
-nmap <leader>w :w!<cr>
+" insert Key
+noremap u i
+noremap U I
+
+" Undo operations
+noremap l u
 
 " make Y to copy till the end of the line
 nnoremap Y y$
@@ -229,44 +222,50 @@ nnoremap = n
 nnoremap - N
 noremap <LEADER><CR> :nohlsearch<CR>
 
-" :W sudo saves the file
-" (useful for handling the permission-denied error)
-command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Cursor movement
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" new cursor movement (the default arrow keys are used for resizing windows)
+"noremap <silent> h h
+noremap <silent> n j
+noremap <silent> e k
+noremap <silent> i l
+noremap <silent> ge gk
+noremap <silent> gn gj
 
-" ===
-" === Cursor Movement
-" ===
-" J/K keys for 5 times j/k (faster navigation)
-noremap <silent> J 5j
-noremap <silent> K 5k
+" E/N keys for 5 times e/n (faster navigation)
+noremap <silent> E 5k
+noremap <silent> N 5j
 
 " H key: go to the start of the line
 noremap <silent> H 0
 " I key: go to the end of the line
-noremap <silent> L $
+noremap <silent> I $
 
 " faster in-line navigation
 noremap W 5w
 noremap B 5b
-noremap E 5e
+
+" set k (same as n, cursor left) to 'end of word'
+noremap k e
 
 
-" ===
-" === Window management
-" ===
+""""""""""""""""""""""""""""""
+" => Window management
+""""""""""""""""""""""""""""""
 " Use <space> + new arrow keys for moving the cursor around windows
 noremap <LEADER>w <C-w>w
 noremap <LEADER>h <C-w>h
-noremap <LEADER>j <C-w>j
-noremap <LEADER>k <C-w>k
-noremap <LEADER>l <C-w>l
+noremap <LEADER>n <C-w>j
+noremap <LEADER>e <C-w>k
+noremap <LEADER>i <C-w>l
 
 " split the screens to up (horizontal), down (horizontal), left (vertical), right (vertical)
 noremap sh :set nosplitright<CR>:vsplit<CR>:set splitright<CR>
-noremap sj :set splitbelow<CR>:split<CR>
-noremap sk :set nosplitbelow<CR>:split<CR>:set splitbelow<CR>
-noremap sl :set splitright<CR>:vsplit<CR>
+noremap sn :set splitbelow<CR>:split<CR>
+noremap se :set nosplitbelow<CR>:split<CR>:set splitbelow<CR>
+noremap si :set splitright<CR>:vsplit<CR>
 
 " Resize splits with arrow keys
 noremap <up> :res +5<CR>
@@ -277,39 +276,36 @@ noremap <right> :vertical resize+5<CR>
 " Press <SPACE> + q to close the window below the current window
 noremap <LEADER>q <C-w>j:q<CR>
 
-
-" ===
-" === Tab management
-" ===
 " Create a new tab with tn
 noremap tn :tabe<CR>
-" Move around tabs with th and tl
+noremap tN :tab split<CR>
+" Move around tabs with th and ti
 noremap th :-tabnext<CR>
-noremap tl :+tabnext<CR>
-" Move the tabs with tmh and tml
+noremap ti :+tabnext<CR>
+" Move the tabs with tmh and tmi
 noremap tmh :-tabmove<CR>
-noremap tml :+tabmove<CR>
+noremap tmi :+tabmove<CR>
 
 
-" ===
-" === Spell checking
-" ===
+""""""""""""""""""""""""""""""
+" => Status line
+""""""""""""""""""""""""""""""
+" Always show the status line
+set laststatus=2
+
+" Format the status line
+set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ Line:\ %l\ \ Column:\ %c
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Spell checking
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
 
 
-" ===
-" === Files, backups and undo
-" ===
-" Turn backup off, since most stuff is in SVN, git etc. anyway...
-set nobackup
-set nowb
-set noswapfile
-
-
-" ===
-" === Misc
-" ===
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Misc
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " open the vimrc file anytime
 noremap <LEADER>rc :e $HOME/.vimrc<CR>
 
@@ -326,9 +322,9 @@ map <leader>x :e ~/buffer.md<cr>
 map <leader>pp :setlocal paste!<cr>
 
 
-" ===
-" === Helper functions
-" ===
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Helper functions
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " run application
 noremap <F5> :call CompileRun()<CR>
 func! CompileRun()
