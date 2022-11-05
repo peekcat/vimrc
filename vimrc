@@ -6,7 +6,7 @@
 "         |___/
 "
 "
-" Github: nilsad
+" Github: zezhoud
 " Maintainer: ZeZhou Ding
 "
 "
