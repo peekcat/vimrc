@@ -6,8 +6,7 @@
 "         |___/
 "
 "
-" Github: zezhoud
-" Maintainer: ZeZhou Ding
+" Github: nilsad
 "
 "
 " ===
@@ -203,6 +202,9 @@ set wrap "Wrap lines
 " set <LEADER> as <SPACE>
 let mapleader="\<Space>"
 
+" quick to exit insert mode
+inoremap jk <ESC>
+
 " disable the default s key
 noremap s <nop>
 
@@ -225,8 +227,6 @@ nnoremap < <<
 nnoremap > >>
 
 " search
-nnoremap = n
-nnoremap - N
 noremap <LEADER><CR> :nohlsearch<CR>
 
 " :W sudo saves the file
